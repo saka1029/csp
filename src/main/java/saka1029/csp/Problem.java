@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import saka1029.csp.JavaCompilerInMemory;
 import saka1029.csp.JavaCompilerInMemory.CompileError;
 
 public class Problem {
@@ -27,12 +26,16 @@ public class Problem {
 
     static class Variable {
         final String name;
-        final int min, max;
+        final Set<Integer> values;
         final Set<Constraint> constraints = new HashSet<>();
         Variable(String name, int min, int max) {
+            this(name, IntStream.rangeClosed(min, max)
+                .mapToObj(Integer::valueOf)
+                .collect(Collectors.toSet()));
+        }
+        Variable(String name, Set<Integer> values) {
             this.name = name;
-            this.min = min;
-            this.max = max;
+            this.values = new HashSet<>(values);
         }
     }
 
@@ -51,6 +54,13 @@ public class Problem {
 
     public void className(String className) {
         this.className = className;
+    }
+
+    public void variable(Set<Integer> values, String... names) {
+        if (constraints.size() > 0)
+            throw new RuntimeException("define all variables before define constraint");
+        for (String name : names)
+            this.variables.put(name, new Variable(name, values));
     }
 
     public void variable(int min, int max, String... names) {
@@ -107,7 +117,9 @@ public class Problem {
             Set<Constraint> remainConstraints = new HashSet<>(constraints);
             List<Variable> generatedVariables = new ArrayList<>();
             for (Variable v : variables.values()) {
-                w.printf("        for (int %1$s = %2$s; %1$s <= %3$s; ++%1$s)%n", v.name, v.min, v.max);
+                w.printf("        for (int %s : new int[] {%s})%n",
+                                    v.name,
+                                    v.values.stream().map(i -> "" + i).collect(Collectors.joining(", ")));
                 generatedVariables.add(v);
                 List<Constraint> generatedConstraints = remainConstraints.stream()
                     .filter(c -> generatedVariables.containsAll(c.variables)).toList();
@@ -157,7 +169,9 @@ public class Problem {
         for (Variable v : variables.values()) {
             sb.append("  variable ")
                 .append(v.name)
-                .append(" [").append(v.min).append(", ").append(v.max).append("]").append(NL);
+                .append(v.values.stream()
+                    .map(i -> "" + i)
+                    .collect(Collectors.joining(",", "[", "]"))).append(NL);
             for (Constraint c : v.constraints)
                 sb.append("    ").append(c.predicate).append(NL);
         }
