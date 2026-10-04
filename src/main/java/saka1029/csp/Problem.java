@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -141,7 +142,10 @@ public class Problem {
                     .filter(c -> generatedVariables.containsAll(c.variables)).toList();
                 if (!generatedConstraints.isEmpty()) {
                     w.printf("        if (%s)%n",
-                        generatedConstraints.stream().map(c -> c.predicate).collect(Collectors.joining(" && ")));
+                        generatedConstraints.stream()
+                            .map(c -> c.predicate)
+                            .sorted(Comparator.comparing(String::length))
+                            .collect(Collectors.joining(" && ")));
                     remainConstraints.removeAll(generatedConstraints);
                 }
             }
