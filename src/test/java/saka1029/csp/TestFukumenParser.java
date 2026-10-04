@@ -31,7 +31,7 @@ public class TestFukumenParser {
             .mapToObj(Integer::valueOf)
             .toList()));
         assertEquals(List.of(List.of(2, 9, 1)), solutions);
-        // System.out.println(problem.generate());
+        System.out.println(problem.generate());
     }
 
 }
