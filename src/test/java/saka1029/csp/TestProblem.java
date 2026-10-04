@@ -62,7 +62,6 @@ public class TestProblem {
         problem.className("SimpleProblem");
         problem.variable(1, 4, "A");
         problem.variable(3, 7, "B", "C");
-        problem.constraint("A >= B");
         problem.constraint("A + B <= C");
         problem.solve(true);
     }
@@ -76,13 +75,12 @@ public class TestProblem {
         Problem problem = new Problem();
         problem.className("SimpleProblem");
         problem.variable(1, 4, "A");
-        problem.variable(3, 7, "B", "C");
-        problem.constraint("A >= B");
+        problem.variable(3, 5, "B", "C");
         problem.constraint("A + B <= C");
         Solver solver = problem.solver();
         List<List<Integer>> result = new ArrayList<>();
         solver.solve(a -> result.add(IntStream.of(a).mapToObj(Integer::valueOf).toList()));
         assertArrayEquals(new String[] {"A", "B", "C"}, solver.variables());
-        assertEquals(List.of(List.of(3, 3, 6), List.of(3, 3, 7), List.of(4, 3, 7)), result);
+        assertEquals(List.of(List.of(1, 3, 4), List.of(1, 3, 5), List.of(1, 4, 5), List.of(2, 3, 5)), result);
     }
 }

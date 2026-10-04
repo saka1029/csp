@@ -185,9 +185,6 @@ public class FukumenParser {
         problem.allDifferent(parser.variables.keySet().stream()
             .map(cp -> Character.toString(cp))
             .toArray(String[]::new));
-        problem.anyCode("static int number(int... digits) {");
-        problem.anyCode("    return java.util.stream.IntStream.of(digits).reduce(0, (a, b) -> 10 * a + b);");
-        problem.anyCode("}");
         return problem;
     }
 
