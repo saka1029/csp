@@ -218,4 +218,15 @@ public class Problem {
         JavaCompilerInMemory.compile(className, generatedSource, OPTIONS)
             .getMethod("main", String[].class).invoke(null, new Object[] {new String[0]});
     }
+
+    public Solver solver() throws
+            IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException, SecurityException,
+            ClassNotFoundException, CompileError,
+            InstantiationException, IllegalArgumentException {
+        String generatedSource = generate();
+        return (Solver)JavaCompilerInMemory.compile(className, generatedSource, OPTIONS)
+            .getDeclaredConstructor()
+            .newInstance();
+    }
 }
