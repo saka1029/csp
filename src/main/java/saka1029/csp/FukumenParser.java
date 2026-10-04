@@ -70,12 +70,12 @@ public class FukumenParser {
         if (eat('(')) {
             String e = expression();
             if (!eat(')'))
-                throw new RuntimeException("')' expected");
+                throw new CSPException("')' expected");
             return "(%s)".formatted(e);
         }
         int v = variable(cp);
         if (v < 0)
-            throw new RuntimeException("digit or variable expected");
+            throw new CSPException("digit or variable expected");
         StringBuilder sb = new StringBuilder("number(");
         boolean first = true;
         do {
@@ -131,7 +131,7 @@ public class FukumenParser {
                 if (eat('='))
                     sb.append(" == ").append(addExpr());
                 else
-                    throw new RuntimeException("Unknown operator '!'");
+                    throw new CSPException("Unknown operator '!'");
             } else if (eat('<')) {
                 if (eat('='))
                     sb.append(" <= ").append(addExpr());
@@ -173,7 +173,7 @@ public class FukumenParser {
         FukumenParser parser = new FukumenParser(input);
         String constraint = parser.parse();
         if (parser.variables.size() > 10)
-            throw new RuntimeException("Too many variables "
+            throw new CSPException("Too many variables "
                 + parser.variables.keySet().stream()
                     .map(cp -> Character.toString(cp))
                     .collect(Collectors.joining(", ", "(", ")")));

@@ -59,14 +59,14 @@ public class Problem {
 
     public void variable(Set<Integer> values, String... names) {
         if (constraints.size() > 0)
-            throw new RuntimeException("define all variables before define constraint");
+            throw new CSPException("define all variables before define constraint");
         for (String name : names)
             this.variables.put(name, new Variable(name, values));
     }
 
     public void variable(int min, int max, String... names) {
         if (constraints.size() > 0)
-            throw new RuntimeException("define all variables before define constraint");
+            throw new CSPException("define all variables before define constraint");
         for (String name : names)
             this.variables.put(name, new Variable(name, min, max));
     }
@@ -150,7 +150,7 @@ public class Problem {
                 }
             }
             if (!remainConstraints.isEmpty())
-                throw new RuntimeException("constraints does not generated: "
+                throw new CSPException("constraints does not generated: "
                     + remainConstraints.stream().map(c -> c.predicate).collect(Collectors.joining(", ")));
 //            w.printf("        callback.accept(new int[] {%s});%n",
             w.printf("        {%n");
