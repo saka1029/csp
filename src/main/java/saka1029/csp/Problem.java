@@ -111,22 +111,25 @@ public class Problem {
             w.printf("%n");
             w.printf("public class %s implements saka1029.csp.Solver {%n", className);
             w.printf("%n");
-            w.printf("    int solve() {%n");
+            w.printf("    @Override%n");
+            w.printf("    public int solve() {%n");
+            w.printf("        System.out.println(%s);%n", 
+                variables.keySet().stream().collect(Collectors.joining(",", "\"", "\"")));
             w.printf("        return solve(a -> System.out.println(%n");
             w.printf("            java.util.stream.IntStream.of(a)%n");
             w.printf("                .mapToObj(i -> Integer.toString(i))%n");
             w.printf("                .collect(java.util.stream.Collectors.joining(\",\"))));%n");
             w.printf("    }%n");
             w.printf("%n");
+            w.printf("    @Override%n");
             w.printf("    public String[] variables() {%n");
             w.printf("        return new String[] {%s};%n",
                 variables.keySet().stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(",")));
             w.printf("    }%n");
             w.printf("%n");
+            w.printf("    @Override%n");
             w.printf("    public int solve(java.util.function.Consumer<int[]> callback) {%n");
             w.printf("        int count = 0;%n");
-            w.printf("        System.out.println(%s);%n", 
-                variables.keySet().stream().collect(Collectors.joining(",", "\"", "\"")));
             Set<Constraint> remainConstraints = new HashSet<>(constraints);
             List<Variable> generatedVariables = new ArrayList<>();
             for (Variable v : variables.values()) {
