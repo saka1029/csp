@@ -165,7 +165,7 @@ public class Problem {
             w.printf("        int result = 0;%n");
             w.printf("        for (int d : digits)%n");
             w.printf("            result = result * 10 + d;%n");
-            w.printf("        return result;");
+            w.printf("        return result;%n");
             w.printf("    }%n");
             w.printf("%n");
             boolean outAnyCode = false;
