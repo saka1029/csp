@@ -5,10 +5,10 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,7 +48,7 @@ public class Problem {
     }
 
     String className;
-    final Map<String, Variable> variables = new TreeMap<>();
+    final Map<String, Variable> variables = new LinkedHashMap<>();
     final List<Constraint> constraints = new ArrayList<>();
     final List<String> anyCodes = new ArrayList<>();
 
@@ -108,11 +108,24 @@ public class Problem {
                 className = "A%d".formatted(new Random().nextInt(1000000));
             if (outImport)
                 w.println();
-            w.printf("public class %s {%n", className);
-            w.println();
-            w.printf("    static int solve() {%n");
+            w.printf("%n");
+            w.printf("public class %s implements saka1029.csp.Solver {%n", className);
+            w.printf("%n");
+            w.printf("    int solve() {%n");
+            w.printf("        return solve(a -> System.out.println(%n");
+            w.printf("            java.util.stream.IntStream.of(a)%n");
+            w.printf("                .mapToObj(i -> Integer.toString(i))%n");
+            w.printf("                .collect(java.util.stream.Collectors.joining(\",\"))));%n");
+            w.printf("    }%n");
+            w.printf("%n");
+            w.printf("    public String[] variables() {%n");
+            w.printf("        return new String[] {%s};%n",
+                variables.keySet().stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(",")));
+            w.printf("    }%n");
+            w.printf("%n");
+            w.printf("    public int solve(java.util.function.Consumer<int[]> callback) {%n");
             w.printf("        int count = 0;%n");
-            w.printf("        System.out.println(%s);%n",
+            w.printf("        System.out.println(%s);%n", 
                 variables.keySet().stream().collect(Collectors.joining(",", "\"", "\"")));
             Set<Constraint> remainConstraints = new HashSet<>(constraints);
             List<Variable> generatedVariables = new ArrayList<>();
@@ -135,13 +148,19 @@ public class Problem {
 //            w.printf("        callback.accept(new int[] {%s});%n",
             w.printf("        {%n");
             w.printf("            ++count;%n");
-            w.printf("            System.out.printf(\"%s%%n\", %s);%n",
-                IntStream.range(0, variables.size()).mapToObj(i -> "%d").collect(Collectors.joining(",")),
+            w.printf("            callback.accept(new int[] {%s});%n",
                 variables.keySet().stream().collect(Collectors.joining(", ")));
             w.printf("        }%n");
             w.printf("        return count;%n");
             w.printf("    }%n");
-            w.println();
+            w.printf("%n");
+            w.printf("    static int number(int... digits) {%n");
+            w.printf("        int result = 0;%n");
+            w.printf("        for (int d : digits)%n");
+            w.printf("            result = result * 10 + d;%n");
+            w.printf("        return result;");
+            w.printf("    }%n");
+            w.printf("%n");
             boolean outAnyCode = false;
             for (String s : anyCodes)
                 if (!s.trim().startsWith("import ")) {
@@ -149,10 +168,10 @@ public class Problem {
                     outAnyCode = true;
                 }
             if (outAnyCode)
-                w.println();
+                w.printf("%n");
             w.printf("    public static void main(String[] args) {%n");
             w.printf("        long start = System.currentTimeMillis();%n");
-            w.printf("        int count = solve();%n");
+            w.printf("        int count = new %s().solve();%n", className);
             w.printf("        System.err.printf(\"solutions: \" + count + \", elapse: %%d msec.%%n\", System.currentTimeMillis() - start);%n");
             w.printf("    }%n");
             w.printf("}%n");
