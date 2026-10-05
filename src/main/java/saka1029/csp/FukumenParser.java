@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * or-expr     = and-expr { '|' and-expr }
  * and-expr    = comp-expr { '&' comp-expr }
  * comp-expr   = add-expr [ COMP add-expr ]
- * COMP        = '=' | '!=' | '<' | <=' | '>' | '>='
+ * COMP        = '=' | '==' | '!=' | '<' | <=' | '>' | '>='
  * add-expr    = mult-expr { ('+' | '-') mult-expr }
  * mult-expr   = primary { ('*' | '/') primary }
  * primary     = '(' expression ')' | VARIABLE
@@ -126,6 +126,7 @@ public class FukumenParser {
         StringBuilder sb = new StringBuilder(addExpr());
         while (true)
             if (eat('=')) {
+                eat('=');
                 sb.append(" == ").append(addExpr());
             } else if (eat('!')) {
                 if (eat('='))

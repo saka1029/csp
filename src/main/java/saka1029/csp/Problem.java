@@ -29,11 +29,6 @@ public class Problem {
         final String name;
         final Set<Integer> values;
         final Set<Constraint> constraints = new HashSet<>();
-        Variable(String name, int min, int max) {
-            this(name, IntStream.rangeClosed(min, max)
-                .mapToObj(Integer::valueOf)
-                .collect(Collectors.toSet()));
-        }
         Variable(String name, Set<Integer> values) {
             this.name = name;
             this.values = new HashSet<>(values);
@@ -60,15 +55,15 @@ public class Problem {
     public void variable(Set<Integer> values, String... names) {
         if (constraints.size() > 0)
             throw new CSPException("define all variables before define constraint");
-        for (String name : names)
+        for (String name : names) {
+            if (variables.containsKey(name))
+                throw new CSPException("variable '%s' duplicated", name);
             this.variables.put(name, new Variable(name, values));
+        }
     }
 
     public void variable(int min, int max, String... names) {
-        if (constraints.size() > 0)
-            throw new CSPException("define all variables before define constraint");
-        for (String name : names)
-            this.variables.put(name, new Variable(name, min, max));
+        variable(IntStream.rangeClosed(min, max).mapToObj(Integer::valueOf).collect(Collectors.toSet()), names);
     }
 
     public void constraint(String predicate) {

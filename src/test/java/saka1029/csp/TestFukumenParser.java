@@ -20,6 +20,13 @@ public class TestFukumenParser {
         System.out.println(problem.generate());
     }
 
+    @Test
+    public void testParser2() {
+        String question = "SEND + MORE == MONEY";
+        Problem problem = FukumenParser.parse(question);
+        System.out.println(problem.generate());
+    }
+
     @Test 
     public void testSolve() throws IllegalAccessException,
             InvocationTargetException, NoSuchMethodException,
