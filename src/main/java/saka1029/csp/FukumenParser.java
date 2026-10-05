@@ -1,6 +1,6 @@
 package saka1029.csp;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -23,7 +23,7 @@ public class FukumenParser {
     final int[] input;
     int index;
     int cp;
-    final Map<Integer, Boolean> variables = new HashMap<>();
+    final Map<Integer, Boolean> variables = new LinkedHashMap<>();
     
     FukumenParser(String input) {
         this.input = input.codePoints().toArray();
