@@ -184,12 +184,12 @@ public class Problem {
                 }
             if (outAnyCode)
                 w.printf("%n");
-            w.printf("    public static void main(String[] args) {%n");
-            w.printf("        long start = System.currentTimeMillis();%n");
-            w.printf("        var solver = new %s();%n", className);
-            w.printf("        int count = solver.solve();%n");
-            w.printf("        solver.err.accept(\"solutions: \" + count + \", elapse: \" + (System.currentTimeMillis() - start) + \" msec.\");%n");
-            w.printf("    }%n");
+            // w.printf("    public static void main(String[] args) {%n");
+            // w.printf("        long start = System.currentTimeMillis();%n");
+            // w.printf("        var solver = new %s();%n", className);
+            // w.printf("        int count = solver.solve();%n");
+            // w.printf("        solver.err.accept(\"solutions: \" + count + \", elapse: \" + (System.currentTimeMillis() - start) + \" msec.\");%n");
+            // w.printf("    }%n");
             w.printf("}%n");
         }
         return sw.toString();
