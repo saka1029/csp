@@ -4,6 +4,16 @@ import java.util.function.Consumer;
 
 public interface Solver {
     /**
+     * 出力先の変更
+     * @param s
+     */
+    void out(Consumer<String> s);
+    /**
+     * エラー出力先の変更
+     * @param s
+     */
+    void err(Consumer<String> s);
+    /**
      * 問題を解き、結果を標準出力および標準エラー出力に出力する。
      * @return 見つかった解の数を返す。
      */

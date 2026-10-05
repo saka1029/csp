@@ -107,11 +107,24 @@ public class Problem {
             w.printf("%n");
             w.printf("public class %s implements saka1029.csp.Solver {%n", className);
             w.printf("%n");
+            w.printf("    java.util.function.Consumer<String> out = System.out::println;%n");
+            w.printf("    java.util.function.Consumer<String> err = System.err::println;%n");
+            w.printf("%n");
+            w.printf("    @Override%n");
+            w.printf("    public void out(java.util.function.Consumer<String> out) {%n");
+            w.printf("        this.out = out;%n");
+            w.printf("    }%n");
+            w.printf("%n");
+            w.printf("    @Override%n");
+            w.printf("    public void err(java.util.function.Consumer<String> err) {%n");
+            w.printf("        this.err = err;%n");
+            w.printf("    }%n");
+            w.printf("%n");
             w.printf("    @Override%n");
             w.printf("    public int solve() {%n");
-            w.printf("        System.out.println(%s);%n", 
+            w.printf("        out.accept(%s);%n", 
                 variables.keySet().stream().collect(Collectors.joining(",", "\"", "\"")));
-            w.printf("        return solve(a -> System.out.println(%n");
+            w.printf("        return solve(a -> out.accept(%n");
             w.printf("            java.util.stream.IntStream.of(a)%n");
             w.printf("                .mapToObj(i -> Integer.toString(i))%n");
             w.printf("                .collect(java.util.stream.Collectors.joining(\",\"))));%n");
@@ -173,8 +186,9 @@ public class Problem {
                 w.printf("%n");
             w.printf("    public static void main(String[] args) {%n");
             w.printf("        long start = System.currentTimeMillis();%n");
-            w.printf("        int count = new %s().solve();%n", className);
-            w.printf("        System.err.printf(\"solutions: \" + count + \", elapse: %%d msec.%%n\", System.currentTimeMillis() - start);%n");
+            w.printf("        var solver = new %s();%n", className);
+            w.printf("        int count = solver.solve();%n");
+            w.printf("        solver.err.accept(\"solutions: \" + count + \", elapse: \" + (System.currentTimeMillis() - start) + \" msec.\");%n");
             w.printf("    }%n");
             w.printf("}%n");
         }
