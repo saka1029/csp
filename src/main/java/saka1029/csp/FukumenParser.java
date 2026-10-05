@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 /**
  * <pre>
  * expression  = or-expr
- * or-expr     = and-expr { '|' and-expr }
- * and-expr    = comp-expr { '&' comp-expr }
+ * or-expr     = and-expr { ('|' | '||') and-expr }
+ * and-expr    = comp-expr { ('&' | '&&') comp-expr }
  * comp-expr   = add-expr [ COMP add-expr ]
  * COMP        = '=' | '==' | '!=' | '<' | <=' | '>' | '>='
  * add-expr    = mult-expr { ('+' | '-') mult-expr }
@@ -150,15 +150,19 @@ public class FukumenParser {
 
     String andExpr() {
         StringBuilder sb = new StringBuilder(compExpr());
-        while (eat('&'))
+        while (eat('&')) {
+            eat('&');
             sb.append(" && ").append(compExpr());
+        }
         return sb.toString();
     }
 
     String orExpr() {
         StringBuilder sb = new StringBuilder(andExpr());
-        while (eat('|'))
+        while (eat('|')) {
+            eat('|');
             sb.append(" || ").append(andExpr());
+        }
         return sb.toString();
     }
 
