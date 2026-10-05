@@ -63,7 +63,14 @@ public class TestProblem {
         problem.variable(1, 4, "A");
         problem.variable(3, 7, "B", "C");
         problem.constraint("A + B <= C");
-        problem.solve(true);
+        System.out.println(problem.generate());
+        try {
+            Solver solver = problem.solver();
+            solver.solve();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException
+                | ClassNotFoundException | InstantiationException | IllegalArgumentException | CompileError e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

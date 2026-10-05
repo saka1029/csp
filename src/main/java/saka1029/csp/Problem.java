@@ -108,16 +108,10 @@ public class Problem {
             w.printf("public class %s implements saka1029.csp.Solver {%n", className);
             w.printf("%n");
             w.printf("    java.util.function.Consumer<String> out = System.out::println;%n");
-            w.printf("    java.util.function.Consumer<String> err = System.err::println;%n");
             w.printf("%n");
             w.printf("    @Override%n");
             w.printf("    public void out(java.util.function.Consumer<String> out) {%n");
             w.printf("        this.out = out;%n");
-            w.printf("    }%n");
-            w.printf("%n");
-            w.printf("    @Override%n");
-            w.printf("    public void err(java.util.function.Consumer<String> err) {%n");
-            w.printf("        this.err = err;%n");
             w.printf("    }%n");
             w.printf("%n");
             w.printf("    @Override%n");
