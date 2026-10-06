@@ -16,15 +16,15 @@ public class TestFukumenParser {
     @Test
     public void testParser() {
         String question = "SEND + MORE = MONEY";
-        Problem problem = FukumenParser.parse(question);
-        System.out.println(problem.generate());
+        FukumenParser.parse(question);
+        // System.out.println(problem.generate());
     }
 
     @Test
     public void testParser2() {
         String question = "SEND + MORE == MONEY";
-        Problem problem = FukumenParser.parse(question);
-        System.out.println(problem.generate());
+        FukumenParser.parse(question);
+        // System.out.println(problem.generate());
     }
 
     @Test 
@@ -38,7 +38,7 @@ public class TestFukumenParser {
             .mapToObj(Integer::valueOf)
             .toList()));
         assertEquals(List.of(List.of(2, 9, 1)), solutions);
-        System.out.println(problem.generate());
+        // System.out.println(problem.generate());
     }
 
 }
