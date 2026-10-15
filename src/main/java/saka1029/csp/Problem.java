@@ -29,11 +29,6 @@ public class Problem {
         final String name;
         final Set<Integer> values;
         final Set<Constraint> constraints = new HashSet<>();
-        Variable(String name, int min, int max) {
-            this(name, IntStream.rangeClosed(min, max)
-                .mapToObj(Integer::valueOf)
-                .collect(Collectors.toSet()));
-        }
         Variable(String name, Set<Integer> values) {
             this.name = name;
             this.values = new HashSet<>(values);
@@ -60,15 +55,15 @@ public class Problem {
     public void variable(Set<Integer> values, String... names) {
         if (constraints.size() > 0)
             throw new CSPException("define all variables before define constraint");
-        for (String name : names)
+        for (String name : names) {
+            if (variables.containsKey(name))
+                throw new CSPException("variable '%s' duplicated", name);
             this.variables.put(name, new Variable(name, values));
+        }
     }
 
     public void variable(int min, int max, String... names) {
-        if (constraints.size() > 0)
-            throw new CSPException("define all variables before define constraint");
-        for (String name : names)
-            this.variables.put(name, new Variable(name, min, max));
+        variable(IntStream.rangeClosed(min, max).mapToObj(Integer::valueOf).collect(Collectors.toSet()), names);
     }
 
     public void constraint(String predicate) {
@@ -112,11 +107,18 @@ public class Problem {
             w.printf("%n");
             w.printf("public class %s implements saka1029.csp.Solver {%n", className);
             w.printf("%n");
+            w.printf("    java.util.function.Consumer<String> out = System.out::println;%n");
+            w.printf("%n");
+            w.printf("    @Override%n");
+            w.printf("    public void out(java.util.function.Consumer<String> out) {%n");
+            w.printf("        this.out = out;%n");
+            w.printf("    }%n");
+            w.printf("%n");
             w.printf("    @Override%n");
             w.printf("    public int solve() {%n");
-            w.printf("        System.out.println(%s);%n", 
+            w.printf("        out.accept(%s);%n", 
                 variables.keySet().stream().collect(Collectors.joining(",", "\"", "\"")));
-            w.printf("        return solve(a -> System.out.println(%n");
+            w.printf("        return solve(a -> out.accept(%n");
             w.printf("            java.util.stream.IntStream.of(a)%n");
             w.printf("                .mapToObj(i -> Integer.toString(i))%n");
             w.printf("                .collect(java.util.stream.Collectors.joining(\",\"))));%n");
@@ -176,11 +178,6 @@ public class Problem {
                 }
             if (outAnyCode)
                 w.printf("%n");
-            w.printf("    public static void main(String[] args) {%n");
-            w.printf("        long start = System.currentTimeMillis();%n");
-            w.printf("        int count = new %s().solve();%n", className);
-            w.printf("        System.err.printf(\"solutions: \" + count + \", elapse: %%d msec.%%n\", System.currentTimeMillis() - start);%n");
-            w.printf("    }%n");
             w.printf("}%n");
         }
         return sw.toString();
